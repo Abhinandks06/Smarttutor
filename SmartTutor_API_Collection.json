@@ -1,0 +1,82 @@
+{
+    "info": {
+        "name": "SmartTutor API",
+        "_postman_id": "smarttutor-api-collection",
+        "description": "Postman collection for SmartTutor API testing",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get JWT Token",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"username\": \"abhinand\",\n    \"password\": \"saltpot006\"\n}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/token/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "token",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Ask Doubt",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"question\": \"What is Django REST Framework?\"\n}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/doubts/ask/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "doubts",
+                        "ask",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "variable": [
+        {
+            "key": "access_token",
+            "value": "<paste_your_access_token_here>"
+        }
+    ]
+}
