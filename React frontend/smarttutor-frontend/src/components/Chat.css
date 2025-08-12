@@ -1,0 +1,86 @@
+/* Container */
+.ct-root { display:flex; height:100vh; font-family: Inter, system-ui, Arial; color:#0f172a; }
+
+/* LEFT / history */
+.ct-left {
+  width: 300px;
+  background: linear-gradient(180deg,#0f172a,#0b1220);
+  color:#fff;
+  padding:16px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.ct-left-top { display:flex; justify-content:space-between; align-items:center; }
+.ct-brand { display:flex; gap:10px; align-items:center; }
+.ct-brand-icon { font-size:26px; color:#7dd3fc; }
+.ct-brand-text { font-weight:700; }
+.ct-logout { background:#ef4444; border:none; color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer; }
+
+/* search */
+.ct-search { display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.06); padding:8px 10px; border-radius:10px; }
+.ct-search input { background:transparent; border:none; outline:none; color:#fff; width:100%; }
+
+/* history list */
+.ct-history-list { flex:1; overflow-y:auto; padding-right:6px; }
+.ct-history-item { display:flex; gap:10px; align-items:flex-start; background: rgba(255,255,255,0.03); padding:10px; border-radius:8px; width:100%; text-align:left; cursor:pointer; margin-bottom:8px; border:none; }
+.ct-history-item:hover { background: rgba(255,255,255,0.06); }
+.ct-history-item.selected { background: linear-gradient(90deg, rgba(125,211,252,0.12), rgba(99,102,241,0.08)); }
+
+/* RIGHT / chat */
+.ct-right { flex:1; position:relative; padding:20px; box-sizing:border-box; display:flex; align-items:stretch; justify-content:center; }
+
+/* background image layer */
+.ct-bg { position:absolute; inset:0; background-repeat:no-repeat; background-position: center right; background-size: contain; opacity:1; z-index:1; pointer-events:none; }
+
+/* subtle overlay to keep text readable (make it transparent) */
+.ct-overlay { position:absolute; inset:0; background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.35)); z-index:2; pointer-events:none; }
+
+/* chat content */
+.ct-chat { position:relative; z-index:3; width:100%; max-width:1100px; display:flex; flex-direction:column; height:calc(100vh - 40px); gap:12px; }
+
+/* header */
+.ct-chat-header { padding:8px 4px; }
+.ct-chat-title { font-weight:700; font-size:1.05rem; color:#0f172a; }
+.ct-chat-sub { font-size:0.85rem; color:#334155; }
+
+/* messages */
+.ct-messages { flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px; }
+
+/* message block */
+.ct-msg { display:flex; gap:12px; align-items:flex-start; max-width:80%; animation:ct-fade 220ms ease; }
+.ct-msg.user { margin-left:auto; flex-direction:row-reverse; }
+.ct-avatar { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:6px; background:#e6eef8; color:#0b1220; }
+
+/* bubble */
+.ct-bubble { position:relative; padding:12px 14px; border-radius:10px; background:#ffffff; color:#0f172a; box-shadow:0 6px 18px rgba(12,18,28,0.06); }
+.ct-msg.user .ct-bubble { background:#e6f9ec; color:#0b3f22; }
+
+/* copy button for bot */
+.ct-copy { position:absolute; right:6px; bottom:6px; border:none; background:transparent; cursor:pointer; color:#475569; }
+.ct-copy:hover { color:#0f172a; }
+
+/* timestamp (small, inside bubble bottom-right) */
+.ct-ts { font-size:0.72rem; color:#64748b; margin-top:8px; }
+
+/* typing dots */
+.ct-typing-dots { display:flex; gap:6px; align-items:center; }
+.ct-typing-dots span { width:7px; height:7px; border-radius:50%; background:#94a3b8; display:inline-block; animation:ct-dot 1s infinite; }
+.ct-typing-dots span:nth-child(2) { animation-delay: .15s; }
+.ct-typing-dots span:nth-child(3) { animation-delay: .3s; }
+
+/* input area (sticky) */
+.ct-input-area { display:flex; gap:10px; padding:12px 0; align-items:center; }
+.ct-input { flex:1; resize:none; padding:12px; border-radius:8px; border:1px solid #e2e8f0; font-size:14px; min-height:46px; }
+.ct-send { background:#2563eb; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+
+/* small copy toast */
+.ct-copy-toast { position:fixed; right:20px; bottom:30px; background:#111827; color:#fff; padding:8px 12px; border-radius:8px; font-size:13px; z-index:9999; opacity:0.95; }
+
+/* animations */
+@keyframes ct-dot { 0%{transform:translateY(0);opacity:0.5}50%{transform:translateY(-6px);opacity:1}100%{transform:translateY(0);opacity:0.5} }
+@keyframes ct-fade { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* responsive */
+@media (max-width:880px){ .ct-left{display:none} .ct-chat{max-width:100%;padding:10px} }

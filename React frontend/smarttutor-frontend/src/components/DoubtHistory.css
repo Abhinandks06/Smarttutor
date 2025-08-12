@@ -1,0 +1,72 @@
+.st-history-container{
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 18px;
+}
+
+.st-history-title{
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.st-history-list{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 64vh;
+  overflow: auto;
+  padding-right: 8px;
+}
+
+.st-history-card{
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.st-history-question{
+  font-weight: 600;
+  color: #111;
+}
+
+.st-history-answer{
+  margin-top: 8px;
+  color: #444;
+  white-space: pre-wrap;
+}
+
+.st-history-meta{
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.st-empty{
+  color: #666;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.st-loading{
+  text-align: center;
+  margin-top: 12px;
+  color: #444;
+}
+
+.st-load-more-wrap{
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.st-load-more-btn{
+  background: linear-gradient(90deg,#6a11cb,#2575fc);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(37,117,252,0.18);
+}
