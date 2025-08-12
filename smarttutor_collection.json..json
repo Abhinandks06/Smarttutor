@@ -1,0 +1,44 @@
+{
+  "info": {
+    "name": "SmartTutor API",
+    "_postman_id": "b3e5b2c7-1f3e-45af-8b77-f7b3b8c3e1a5",
+    "description": "Collection to test the SmartTutor Doubts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Ask Doubt",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0OTk1ODMxLCJpYXQiOjE3NTQ5OTU1MzEsImp0aSI6IjAxZjM2ZmExMDM4ZTQxZWRhNTdkMWVhOWQwMmFkODBkIiwidXNlcl9pZCI6IjYifQ.X32IP3B0WGVKEyhXrqYPZOOGPwzAnJ5Z03zfbjFgQAs"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"question\": \"What is the capital of France?\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/doubts/",
+          "protocol": "http",
+          "host": [
+            "127.0.0.1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "doubts",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
