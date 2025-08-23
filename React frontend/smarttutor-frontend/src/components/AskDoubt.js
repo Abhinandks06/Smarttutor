@@ -43,9 +43,11 @@ export default function AskDoubt() {
       const res = await axios.get(`${API_BASE}/api/doubts/history/`, {
         headers: headers(),
       });
-      setHistory(res.data);
+
+      setHistory(Array.isArray(res.data.results) ? res.data.results : []);
     } catch (err) {
       console.error("History fetch error:", err);
+      setHistory([]);
     }
   }
 

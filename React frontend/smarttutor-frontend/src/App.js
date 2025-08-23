@@ -4,7 +4,8 @@ import Home from "./components/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import About from "./components/About";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Dashboard.tsx";
+
 import AskDoubt from "./components/AskDoubt"; // assuming you have it
 import ProtectedRoute from "./components/ProtectedRoute";
 
