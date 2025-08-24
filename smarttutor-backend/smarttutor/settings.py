@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'doubts',         
     'users',
-    'study',
-    'quiz',
+    'courses',
+    'quizzes',
     'progress',
+
 
 ]
 

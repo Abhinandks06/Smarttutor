@@ -25,8 +25,7 @@ export default function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1 className="welcome-title">Welcome to SmartTutor 🎓</h1>
-          <p className="welcome-subtitle">You are successfully logged in!</p>
+          <h1 className="welcome-title">SmartTutor 🎓</h1>
           <button className="logout-btn" onClick={handleLogout}>
             Logout
           </button>

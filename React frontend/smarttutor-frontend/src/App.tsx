@@ -1,29 +1,51 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
-import Dashboard from "./components/Dashboard";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import About from "./components/About";
+import Dashboard from "./components/Dashboard.tsx"; // 👈 check if this is inside components or pages
+import AskDoubt from "./components/AskDoubt";
+import ProtectedRoute from "./components/ProtectedRoute";
+import QuizPage from "./pages/QuizPage.tsx"; // 👈 new quiz page
 
-// Simple NotFound component
-const NotFound = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">404</h1>
-      <p className="text-gray-600 mb-4">Page not found</p>
-      <a href="/" className="text-blue-500 hover:text-blue-700">
-        Go back to home
-      </a>
-    </div>
-  </div>
-);
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
 
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </BrowserRouter>
-);
+        {/* Protected routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-export default App;
+        <Route
+          path="/ask"
+          element={
+            <ProtectedRoute>
+              <AskDoubt />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/quiz"
+          element={
+            <ProtectedRoute>
+              <QuizPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}

@@ -6,18 +6,8 @@ from .views import (
     AskDoubtView, DoubtHistoryView, DeleteDoubtView,
     ChatSessionListCreateView, ChatSessionDetailView, ClearAllDoubtsView,
 
-    # Study/Quiz/Progress APIs
-    StudyProgramViewSet, LessonViewSet, QuizViewSet,
-    QuestionViewSet, AnswerViewSet, ProgressViewSet, SubmitQuizView
 )
 
-router = DefaultRouter()
-router.register(r'programs', StudyProgramViewSet, basename='program')
-router.register(r'lessons', LessonViewSet, basename='lesson')
-router.register(r'quizzes', QuizViewSet, basename='quiz')
-router.register(r'questions', QuestionViewSet, basename='question')
-router.register(r'answers', AnswerViewSet, basename='answer')
-router.register(r'progress', ProgressViewSet, basename='progress')
 
 urlpatterns = [
     # Doubts + Sessions (kept as-is for your existing frontend)
@@ -28,7 +18,4 @@ urlpatterns = [
     path('sessions/<int:pk>/', ChatSessionDetailView.as_view(), name='chat-session-detail'),  # DELETE
     path('doubts/clear-all/', ClearAllDoubtsView.as_view(), name='clear_all_doubts'),
 
-    # Study / Quiz / Progress
-    path('', include(router.urls)),
-    path('quiz/<int:quiz_id>/submit/', SubmitQuizView.as_view(), name='submit-quiz'),
 ]

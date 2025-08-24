@@ -1,35 +1,21 @@
-from rest_framework import viewsets, generics, status
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 
-from .models import (
-    ChatSession, Doubt,
-    StudyProgram, Lesson, Quiz, Question, Answer, Progress
-)
-from .serializers import (
-    ChatSessionSerializer, DoubtSerializer,
-    StudyProgramSerializer, LessonSerializer,
-    QuizSerializer, QuestionSerializer, AnswerSerializer,
-    ProgressSerializer
-)
-
-# ===========================
-#  SIMPLE AI ANSWER (replace with your real AI call)
-# ===========================
-def get_ai_answer(question: str) -> str:
-    # Swap this with your real AI integration.
-    return f"AI-generated answer for: {question}"
+from common.ai_service import get_ai_answer
+from .models import Doubt, ChatSession
+from .serializers import DoubtSerializer, ChatSessionSerializer
 
 
 # ===========================
-#  ENDPOINTS USED BY FRONTEND
+#   ASK A DOUBT (AI ANSWER)
 # ===========================
-
 class AskDoubtView(generics.CreateAPIView):
     """
     POST /api/doubts/
-    Body: { question: str, session: optional int, program: optional int, lesson: optional int }
+    Body: { question: str, session: optional int }
     """
     serializer_class = DoubtSerializer
     permission_classes = [IsAuthenticated]
@@ -40,38 +26,30 @@ class AskDoubtView(generics.CreateAPIView):
             return Response({"error": "No question provided"}, status=400)
 
         session_id = request.data.get("session")
-        program_id = request.data.get("program")
-        lesson_id = request.data.get("lesson")
-
         session = None
-        program = None
-        lesson = None
 
         if session_id:
             session = get_object_or_404(ChatSession, pk=session_id, user=request.user)
-        if program_id:
-            program = get_object_or_404(StudyProgram, pk=program_id, created_by=request.user)
-        if lesson_id:
-            lesson = get_object_or_404(Lesson, pk=lesson_id, program__created_by=request.user)
 
+        # Call AI service
         answer = get_ai_answer(question)
 
+        # Save doubt in DB
         doubt = Doubt.objects.create(
             user=request.user,
             question=question,
             answer=answer,
             session=session,
-            program=program,
-            lesson=lesson,
         )
-        data = DoubtSerializer(doubt).data
-        return Response(data, status=201)
+        return Response(DoubtSerializer(doubt).data, status=201)
 
 
+# ===========================
+#   DOUBT HISTORY
+# ===========================
 class DoubtHistoryView(generics.ListAPIView):
     """
     GET /api/doubts/history/?page=&page_size=&session_id=
-    Returns: {results, page, page_size, total, has_more}
     """
     serializer_class = DoubtSerializer
     permission_classes = [IsAuthenticated]
@@ -95,17 +73,19 @@ class DoubtHistoryView(generics.ListAPIView):
         start = (page - 1) * page_size
         end = start + page_size
         items = qs[start:end]
-        data = DoubtSerializer(items, many=True).data
-        has_more = end < total
+
         return Response({
-            'results': data,
+            'results': DoubtSerializer(items, many=True).data,
             'page': page,
             'page_size': page_size,
             'total': total,
-            'has_more': has_more,
+            'has_more': end < total,
         })
 
 
+# ===========================
+#   DELETE A SINGLE DOUBT
+# ===========================
 class DeleteDoubtView(generics.DestroyAPIView):
     """
     DELETE /api/doubts/history/<pk>/
@@ -117,9 +97,12 @@ class DeleteDoubtView(generics.DestroyAPIView):
         return Doubt.objects.filter(user=self.request.user)
 
 
+# ===========================
+#   CLEAR ALL DOUBTS
+# ===========================
 class ClearAllDoubtsView(generics.GenericAPIView):
     """
-    DELETE /api/doubts/doubts/clear-all/   (kept path to match your existing urls.py)
+    DELETE /api/doubts/clear-all/
     """
     permission_classes = [IsAuthenticated]
 
@@ -128,6 +111,9 @@ class ClearAllDoubtsView(generics.GenericAPIView):
         return Response({'message': 'All doubts cleared'}, status=status.HTTP_200_OK)
 
 
+# ===========================
+#   CHAT SESSION VIEWS
+# ===========================
 class ChatSessionListCreateView(generics.ListCreateAPIView):
     """
     GET/POST /api/doubts/sessions/
@@ -151,105 +137,3 @@ class ChatSessionDetailView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return ChatSession.objects.filter(user=self.request.user)
-
-
-# ===========================
-#   STUDY PROGRAM VIEWSETS
-# ===========================
-
-class StudyProgramViewSet(viewsets.ModelViewSet):
-    serializer_class = StudyProgramSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return StudyProgram.objects.filter(created_by=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
-
-
-class LessonViewSet(viewsets.ModelViewSet):
-    serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Lesson.objects.filter(program__created_by=self.request.user)
-
-
-class QuizViewSet(viewsets.ModelViewSet):
-    serializer_class = QuizSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Quiz.objects.filter(lesson__program__created_by=self.request.user)
-
-
-class QuestionViewSet(viewsets.ModelViewSet):
-    serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Question.objects.filter(quiz__lesson__program__created_by=self.request.user)
-
-
-class AnswerViewSet(viewsets.ModelViewSet):
-    serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Answer.objects.filter(question__quiz__lesson__program__created_by=self.request.user)
-
-
-class ProgressViewSet(viewsets.ModelViewSet):
-    serializer_class = ProgressSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Progress.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-# ===========================
-#   CUSTOM QUIZ SUBMISSION
-# ===========================
-
-class SubmitQuizView(generics.GenericAPIView):
-    """
-    POST /api/doubts/quiz/<quiz_id>/submit/
-    Body: { "answers": { "<question_id>": <answer_id>, ... } }
-    """
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, quiz_id):
-        quiz = get_object_or_404(Quiz, id=quiz_id, lesson__program__created_by=request.user)
-        answers = request.data.get("answers", {})  # {question_id: answer_id}
-
-        score = 0
-        total = quiz.questions.count()
-
-        for question in quiz.questions.all():
-            selected_answer_id = answers.get(str(question.id))
-            if selected_answer_id:
-                ans = Answer.objects.filter(id=selected_answer_id, question=question).first()
-                if ans and ans.is_correct:
-                    score += 1
-
-        percentage = (score / total * 100) if total > 0 else 0.0
-
-        progress, created = Progress.objects.get_or_create(
-            user=request.user,
-            lesson=quiz.lesson,
-            defaults={"completed": True, "score": percentage}
-        )
-        if not created:
-            progress.completed = True
-            progress.score = percentage
-            progress.save()
-
-        return Response({
-            "score": score,
-            "total": total,
-            "percentage": percentage,
-        }, status=status.HTTP_200_OK)
